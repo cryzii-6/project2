@@ -1,7 +1,8 @@
 <script lang="ts">
     import { Button, Modal, Label } from 'flowbite-svelte';
+    import { onMount } from 'svelte';
 
-    interface Event {
+    interface MyEvent {
         name: string;
         contact: string;
         startDate: Date;
@@ -9,13 +10,15 @@
     }
 
     let formModal = false; 
-    let events: Event[] = []; 
+    let events: MyEvent[] = []; 
     let selectedStartDate = '';
     let selectedEndDate = '';
     let eventName = '';
     let contactNumber = '';
-    let currentYear = 2024; 
+    let currentYear = new Date().getFullYear(); // Current year
     let currentMonthIndex = new Date().getMonth(); 
+    let currentDay = new Date().getDate(); // Current day (1-31)
+    let filter = 'all'; // State for filter selection
 
     function handleModalClose() {
         formModal = false;
@@ -23,7 +26,7 @@
 
     function handleFormSubmit(e: SubmitEvent) {
         e.preventDefault(); 
-        const newEvent: Event = {
+        const newEvent: MyEvent = {
             name: eventName,
             contact: contactNumber,
             startDate: new Date(selectedStartDate),
@@ -32,9 +35,14 @@
         events.push(newEvent); 
         console.log("Event created!", newEvent);
         handleModalClose(); 
+        
+        // Save to localStorage after adding a new event
+        if (typeof window !== 'undefined') {
+            window.localStorage.setItem('events', JSON.stringify(events));
+        }
     }
 
-    function getEventsForDate(date: Date): Event[] {
+    function getEventsForDate(date: Date): MyEvent[] {
         return events.filter(event => {
             const eventStart = event.startDate.getTime();
             const eventEnd = event.endDate.getTime();
@@ -43,14 +51,45 @@
         });
     }
 
+    function filterEvents(): MyEvent[] {
+        if (filter === 'upcoming') {
+            return events.filter(event => event.startDate > new Date());
+        } else if (filter === 'past') {
+            return events.filter(event => event.endDate < new Date());
+        }
+        return events; // Return all events if filter is 'all'
+    }
+
     function updateMonth(event: Event) {
-        const selectElement = event.target as HTMLSelectElement;
+        const selectElement = event.target as HTMLSelectElement; // Type assertion for HTMLSelectElement
         const selectedMonthIndex = parseInt(selectElement.value);
         currentMonthIndex = selectedMonthIndex; 
     }
+
+    onMount(() => {
+        // Check if we're in a browser environment before accessing localStorage
+        if (typeof window !== 'undefined') {
+            const storedEvents = window.localStorage.getItem('events');
+            if (storedEvents) {
+                events = JSON.parse(storedEvents);
+            }
+        }
+    });
+
+    // Get the first day of the current month and the total number of days in the month
+    function getCalendarDays() {
+        const firstDayOfMonth = new Date(currentYear, currentMonthIndex, 1);
+        const lastDayOfMonth = new Date(currentYear, currentMonthIndex + 1, 0);
+        const totalDays = lastDayOfMonth.getDate();
+        const startDayIndex = firstDayOfMonth.getDay(); // 0 = Sunday, 1 = Monday, etc.
+
+        // Create an array with empty slots for days before the first of the month
+        const daysArray = new Array(startDayIndex).fill(null).concat(Array.from({ length: totalDays }, (_, i) => i + 1));
+        return daysArray;
+    }
 </script>
 
-<main class="flex-1 flex flex-col items-start justify-start p-[3.5rem]">
+<main class="flex-1 flex flex-col items-start justify-start p-[1.9rem] pl-[4.5rem] pt-[2rem]">
     <h1 class="text-5xl pb-2 pt-8">Events</h1>
     <div class="flex flex-col w-full">
         <div class="flex items-center mb-4 justify-between">
@@ -63,8 +102,7 @@
                 <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
                 
                 <div class="relative ml-4">
-                    <select class="p-2 border border-gray-300 rounded-lg bg-[#D9D9D9] focus:outline-none focus:ring-2 focus:ring-sky-400 pl-10 appearance-none font-bold h-10">
-                        <option value="">Filter</option>
+                    <select on:change={e => filter = (e.target as HTMLSelectElement).value} class="p-2 border border-gray-300 rounded-lg bg-[#D9D9D9] focus:outline-none focus:ring-2 focus:ring-sky-400 pl-10 appearance-none font-bold h-10">
                         <option value="all">All</option>
                         <option value="upcoming">Upcoming</option>
                         <option value="past">Past</option>
@@ -105,15 +143,16 @@
             <div class="text-center font-bold col-span-1">FRI</div>
             <div class="text-center font-bold col-span-1">SAT</div>
         
-            {#each Array.from({ length: 30 }, (_, i) => new Date(currentYear, currentMonthIndex, i + 1)) as date}
-                <div class="p-4 border border-gray-200 rounded-lg relative h-[5.5rem] flex flex-col items-center justify-center">
-                    <span class="text-gray-600 font-semibold text-lg">{date.getDate()}</span>
-                    
-                    {#each getEventsForDate(date) as event}
-                        <div class="absolute top-8 left-0 bg-blue-500 text-white text-xs rounded-full px-2 py-1">
-                            {event.name}
-                        </div>
-                    {/each}
+            {#each getCalendarDays() as day, index}
+                <div class={`p-4 border border-gray-200 rounded-lg relative h-[5.5rem] flex flex-col items-center justify-center`}>
+                    {#if day}
+                        <span class="text-gray-600 font-semibold text-lg">{day}</span>
+                        {#each getEventsForDate(new Date(currentYear, currentMonthIndex, day)) as event}
+                            <div class="absolute top-8 left-0 bg-blue-500 text-white text-xs rounded-full px-2 py-1">
+                                {event.name}
+                            </div>
+                        {/each}
+                    {/if}
                 </div>
             {/each}
         </div>
@@ -164,3 +203,9 @@
         </Modal>
     </div>
 </main>
+
+<style>
+    .event { 
+        /* Style for event here */ 
+    }
+</style>
