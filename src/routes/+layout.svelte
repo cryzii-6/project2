@@ -7,7 +7,7 @@
 
     // Updated tabs array with FontAwesome icons and labels
     let tabs = [
-        { icon: "fa-solid fa-house", label: "Home", href: "/" },
+        { icon: "fa-solid fa-house", label: "Home", href: "/project2/" },
         { icon: "fa-solid fa-calendar", label: "Schedule", href: "schedule/" },
         { icon: "fa-solid fa-envelope", label: "Contact", href: "contact/" },
     ];
