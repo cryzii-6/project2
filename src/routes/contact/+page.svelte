@@ -40,7 +40,7 @@
 
         <!-- Submit Button Aligned Right -->
         <div class="flex justify-end ">
-            <Button type="submit" class="mt-4 bg-[#003CFF] p-3 w-[150px]">Submit</Button>
+            <Button type="submit" class="mt-4 bg-[#003CFF] p-3 w-[150px]">SUBMIT</Button>
         </div>
     </form>
 </main>
