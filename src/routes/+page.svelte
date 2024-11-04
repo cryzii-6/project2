@@ -8,3 +8,4 @@
         <p class="text-left ml-4 text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-normal">Plan and manage your events with ease.<br> Let's make your next gathering unforgettable!</p>
     </div>
 </main>
+
