@@ -1,11 +1,56 @@
-<main class="flex-1 flex flex-col items-start justify-start p-[12rem] pl-[9rem]">
-    <div class="flex flex-col lg:justify-center text-left gap-6 md:gap-8 lg:gap-10">
-        <!-- Content goes here -->
-        <h1 class="text-slate-900 font-medium text-7xl sm:text-8xl md:text-9xl pr-4 lg:pr-1 mb-2 mt-2 ml-4">
+<main class="flex-1 flex flex-col items-start justify-start p-[4rem] md:p-[8rem] lg:p-[12rem] pl-[2rem] md:pl-[6rem] lg:pl-[9rem]">
+    <div class="flex flex-col lg:justify-center text-left gap-4 md:gap-6 lg:gap-8">
+        <h1 class="text-slate-900 font-medium text-4xl sm:text-6xl md:text-7xl lg:text-8xl pr-2 md:pr-4 lg:pr-1 mb-2 mt-2 ml-4">
             Welcome to our <br>
             <span class="mt-1 block">Website!</span>
         </h1>
-        <p class="text-left ml-4 text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-normal">Plan and manage your events with ease.<br> Let's make your next gathering unforgettable!</p>
+        <p class="text-left ml-4 text-lg sm:text-xl md:text-2xl lg:text-3xl font-normal">
+            Plan and manage your events with ease.<br> Let's make your next gathering unforgettable!
+        </p>
     </div>
 </main>
 
+<style>
+    /* Responsiveness for /Route */
+    @media (max-width: 1024px) {
+        main {
+            padding: 3rem 4rem;
+        }
+        h1 {
+            font-size: 3.5rem;
+        }
+        p {
+            font-size: 1.75rem;
+        }
+    }
+    @media (max-width: 768px) {
+        main {
+            padding: 2rem 3rem;
+            padding-left: 1.5rem;
+        }
+        h1 {
+            font-size: 2.75rem;
+            padding-right: 1rem;
+        }
+        p {
+            font-size: 1.25rem;
+        }
+    }
+    @media (max-width: 640px) {
+        main {
+            padding: 1.5rem;
+            padding-left: 1rem;
+        }
+        h1 {
+            font-size: 2.25rem;
+            padding-right: 0.5rem;
+            margin-bottom: 1rem;
+            margin-top: 1rem;
+            margin-left: 0.5rem;
+        }
+        p {
+            font-size: 1rem;
+            margin-left: 0.5rem;
+        }
+    }
+</style>

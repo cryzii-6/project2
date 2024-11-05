@@ -205,7 +205,24 @@
 </main>
 
 <style>
-    .event { 
-        /* Style for event here */ 
+    .modal-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 90%;
+    }
+    @media (max-width: 768px) {
+        .grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+    @media (max-width: 640px) {
+        .grid {
+            grid-template-columns: repeat(1, 1fr);
+        }
+        .modal-container {
+            max-width: 95%;
+        }
     }
 </style>
